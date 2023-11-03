@@ -1,1 +1,77 @@
+import java.util.HashMap;
+import java.util.Map;
+
+class WeatherData {
+    private double temperature;
+    private double humidity;
+    private double windSpeed;
+    private String condition;
+
+    public WeatherData(double temperature, double humidity, double windSpeed, String condition) {
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.windSpeed = windSpeed;
+        this.condition = condition;
+    }
+
+    public double getTemperature() {
+        return temperature;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public double getWindSpeed() {
+        return windSpeed;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+}
+
+class WeatherDataAdapter {
+    private Map<String, String> rawData;
+    private String sourceFormat;
+
+    public WeatherDataAdapter(Map<String, String> rawData, String sourceFormat) {
+        this.rawData = rawData;
+        this.sourceFormat = sourceFormat;
+    }
+
+    public WeatherData getStandardizedWeatherData() {
+        double temperature = Double.parseDouble(rawData.get("temperature"));
+        double humidity = Double.parseDouble(rawData.get("humidity"));
+        double windSpeed = Double.parseDouble(rawData.get("wind_speed"));
+        String condition = rawData.get("condition");
+
+        return new WeatherData(temperature, humidity, windSpeed, condition);
+    }
+
+    public String getSourceFormat() {
+        return sourceFormat;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Map<String, String> jsonWeatherData = new HashMap<>();
+        jsonWeatherData.put("temperature", "25.5");
+        jsonWeatherData.put("humidity", "60.2");
+        jsonWeatherData.put("wind_speed", "15.0");
+        jsonWeatherData.put("condition", "Sunny");
+
+        WeatherDataAdapter jsonAdapter = new WeatherDataAdapter(jsonWeatherData, "JSON");
+
+        WeatherData standardizedData = jsonAdapter.getStandardizedWeatherData();
+
+        System.out.println("Standardized Weather Data:");
+        System.out.println("Temperature: " + standardizedData.getTemperature());
+        System.out.println("Humidity: " + standardizedData.getHumidity());
+        System.out.println("Wind Speed: " + standardizedData.getWindSpeed());
+        System.out.println("Condition: " + standardizedData.getCondition());
+        System.out.println("Source Format: " + jsonAdapter.getSourceFormat());
+    }
+}
 
